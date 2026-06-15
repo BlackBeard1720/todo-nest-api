@@ -9,7 +9,10 @@ export class TodosService {
     {
       id: 1,
       title: 'Học NestJS',
+      description: 'Hoàn thành CRUD Todo cơ bản',
       completed: false,
+      priority: 'medium',
+      dueDate: '2026-06-30',
     },
   ];
   private nextId = 2;
@@ -32,7 +35,10 @@ export class TodosService {
     const newTodo: Todo = {
       id: this.nextId,
       title: createTodoDto.title,
+      description: createTodoDto.description,
       completed: createTodoDto.completed ?? false,
+      priority: createTodoDto.priority ?? 'medium',
+      dueDate: createTodoDto.dueDate,
     };
 
     this.nextId++;
