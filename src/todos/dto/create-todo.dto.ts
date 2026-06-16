@@ -1,8 +1,14 @@
-import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString, IsIn } from "class-validator";
-import type { TodoPriority } from "../todo.interface";
+import {
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsIn,
+} from 'class-validator';
+import type { TodoPriority } from '../todo.interface';
 
 export class CreateTodoDto {
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
   title!: string;
@@ -13,8 +19,7 @@ export class CreateTodoDto {
 
   @IsOptional()
   @IsBoolean()
-  completed!: boolean;
-
+  completed?: boolean;
 
   @IsOptional()
   @IsIn(['low', 'medium', 'high'])

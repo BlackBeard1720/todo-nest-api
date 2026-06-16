@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Todo } from './todo.interface';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TodosService {
+  constructor(private readonly configService: ConfigService) {}
+
   private todos: Todo[] = [
     {
       id: 1,
@@ -55,8 +58,20 @@ export class TodosService {
       todo.title = updateTodoDto.title;
     }
 
+    if (updateTodoDto.description !== undefined) {
+      todo.description = updateTodoDto.description;
+    }
+
     if (updateTodoDto.completed !== undefined) {
       todo.completed = updateTodoDto.completed;
+    }
+
+    if (updateTodoDto.priority !== undefined) {
+      todo.priority = updateTodoDto.priority;
+    }
+
+    if (updateTodoDto.dueDate !== undefined) {
+      todo.dueDate = updateTodoDto.dueDate;
     }
     return todo;
   }
