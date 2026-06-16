@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { TodoPriorityEnum } from "../enums/todo-priority.enum";
 
 @Entity('todos')
 export class TodoEntity {
@@ -11,11 +12,15 @@ export class TodoEntity {
     @Column({ nullable: true })
     description?: string;
 
-    @Column({ default: true })
+    @Column({ default: false })
     completed!: boolean;
 
-    @Column({ default: 'medium' })
-    priority!: 'low' | 'medium' | 'high';
+    @Column({
+        type: 'enum',
+        enum: TodoPriorityEnum,
+        default: TodoPriorityEnum.MEDIUM,
+    })
+    priority!: TodoPriorityEnum;
 
     @Column({ nullable: true })
     dueDate?: string;

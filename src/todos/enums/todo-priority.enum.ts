@@ -1,5 +1,5 @@
-export class TodoPriorityEnum {
-    LOW = 'low';
-    MEDIUM = 'medium';
-    HIGH = 'high';
+export enum TodoPriorityEnum {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
 }

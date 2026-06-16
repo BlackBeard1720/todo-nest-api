@@ -23,7 +23,7 @@ export class TodosController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.todosService.findOne(Number(id));
+    return this.todosService.findOne(id);
   }
 
   @Post()
@@ -36,11 +36,11 @@ export class TodosController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTodoDto: UpdateTodoDto,
   ) {
-    return this.todosService.update(Number(id), updateTodoDto);
+    return this.todosService.update(id, updateTodoDto);
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.todosService.remove(Number(id));
+    return this.todosService.remove(id);
   }
 }
