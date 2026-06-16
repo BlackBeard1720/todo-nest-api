@@ -1,31 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Todo } from './todo.interface';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TodoEntity } from './entities/todo.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TodosService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @InjectRepository(TodoEntity)
+    private readonly todoRepository: Repository<TodoEntity>,
+  ) {}
 
-  private todos: Todo[] = [
-    {
-      id: 1,
-      title: 'Học NestJS',
-      description: 'Hoàn thành CRUD Todo cơ bản',
-      completed: false,
-      priority: 'medium',
-      dueDate: '2026-06-30',
-    },
-  ];
-  private nextId = 2;
-
-  findAll(): Todo[] {
-    return this.todos;
+  findAll(): Promise<TodoEntity[]> {
+    return this.todoRepository.find();
   }
 
-  findOne(id: number): Todo {
-    const todo = this.todos.find((todo) => todo.id === id);
+  async findOne(id: number): Promise<TodoEntity> {
+    const todo = await this.todoRepository.findOneBy({ id });
 
     if (!todo) {
       throw new NotFoundException(`Todo with id ${id} not found`);
@@ -34,53 +26,23 @@ export class TodosService {
     return todo;
   }
 
-  create(createTodoDto: CreateTodoDto): Todo {
-    const newTodo: Todo = {
-      id: this.nextId,
-      title: createTodoDto.title,
-      description: createTodoDto.description,
-      completed: createTodoDto.completed ?? false,
-      priority: createTodoDto.priority ?? 'medium',
-      dueDate: createTodoDto.dueDate,
-    };
+  async create(createTodoDto: CreateTodoDto): Promise<TodoEntity> {
+    const todo = this.todoRepository.create(createTodoDto);
 
-    this.nextId++;
-
-    this.todos.push(newTodo);
-
-    return newTodo;
+    return this.todoRepository.save(todo);
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto): Todo {
-    const todo = this.findOne(id);
+  async update(id: number, updateTodoDto: UpdateTodoDto): Promise<TodoEntity> {
+    const todo = await this.findOne(id);
 
-    if (updateTodoDto.title !== undefined) {
-      todo.title = updateTodoDto.title;
-    }
+    Object.assign(todo, updateTodoDto);
 
-    if (updateTodoDto.description !== undefined) {
-      todo.description = updateTodoDto.description;
-    }
-
-    if (updateTodoDto.completed !== undefined) {
-      todo.completed = updateTodoDto.completed;
-    }
-
-    if (updateTodoDto.priority !== undefined) {
-      todo.priority = updateTodoDto.priority;
-    }
-
-    if (updateTodoDto.dueDate !== undefined) {
-      todo.dueDate = updateTodoDto.dueDate;
-    }
-    return todo;
+    return this.todoRepository.save(todo);
   }
 
-  remove(id: number): Todo {
-    const todo = this.findOne(id);
+  async remove(id: number): Promise<void> {
+    const todo = await this.findOne(id);
 
-    this.todos = this.todos.filter((todo) => todo.id !== id);
-
-    return todo;
+    await this.todoRepository.remove(todo);
   }
 }

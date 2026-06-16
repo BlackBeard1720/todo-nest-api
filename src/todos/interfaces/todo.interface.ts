@@ -1,10 +1,10 @@
-export type TodoPriority = 'low' | 'medium' | 'high';
+import { TodoPriorityEnum } from "../enums/todo-priority.enum";
 
 export interface Todo {
   id: number;
   title: string;
   description?: string;
   completed: boolean;
-  priority: TodoPriority;
+  priority: TodoPriorityEnum;
   dueDate?: string;
 }
